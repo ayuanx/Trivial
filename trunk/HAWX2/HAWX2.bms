@@ -1,85 +1,98 @@
 // HAWX2 "inicache.bin" Parser
 // .pak (zip) password: pF5hfGe2TfrbGe8IzaRtXsIm
-// Use with "-w" command option
+// Use with >0.5.17b and "-w" command option
+
 endian big
 set term short 0x0D0A
 get _num long
 for i = 0 < _num
-	getct _name string 0x00
-	string _name += ".ini"
-	get _offset long
-	get _size long
-	
-	if _size > 0
-		savepos _pos
-		log _name 0, 0
-		open "." _name 1
-		goto _offset
-		math _offset += _size
-		do
-			get _type byte
-			if _type == 0
-				getct _sec string 0x00
-				string _section = "["
-				string _section += _sec
-				string _section += "]"
-				putct _section string -1 1
-				put term short 1
-			elif _type == 1
-				getct _key string 0x00
-				string _key += " = "
-				get _keytype byte
-				if _keytype == 0 // Integer
-					get _value long
-					string _str p= "%d" _value
-				elif _keytype == 1 // Float
-					get _value long //float
-					string _str p= "%08X" _value
-				elif _keytype == 2 // String
-					getct _str string 0x00
-				elif _keytype == 5 // Vector
-					get _value1 long //float
-					get _value2 long //float
-					get _value3 long //float
-					string _str p= "%08X, %08X, %08X" _value1 _value2 _value3
-				elif _keytype == 7 // Bool
-					get _value byte
-					if _value == 0
-						string _str = "FALSE"
-					elif _value == 1
-						string _str = "TRUE"
-					else
-						print "_value = %_value|h%"
-						cleanexit
-					endif
-				elif _keytype == 8 // Rectangle
-					get _value1 long //float
-					get _value2 long //float
-					get _value3 long //float
-					get _value4 long //float
-					string _str p= "%08X, %08X, %08X, %08X" _value1 _value2 _value3 _value4
-				elif _keytype == 9 // Position
-					get _value1 long //float
-					get _value2 long //float
-					string _str p= "%08X, %08X" _value1 _value2
-				elif _keytype == 10 // ARGB
-					get _value long
-					string _str p= "0x%08X" _value
-				else
-					print "_keytype = %_keytype|h%"
-					cleanexit
-				endif
-				string _key += _str
-				putct _key string -1 1
-				put term short 1
-			else
-				print "_type = %_type|h%"
-				cleanexit
-			endif
-			savepos _offset1
-		while _offset1 < _offset
-		goto _pos
-	endif
+    getct _name string 0x00
+    string _name += ".ini"
+    get _offset long
+    get _size long
+    
+    if _size > 0
+        savepos _pos
+        log _name 0, 0
+        open "." _name 1
+        goto _offset
+        math _offset += _size
+        do
+            get _type byte
+            if _type == 0
+                getct _sec string 0x00
+                string _section = "["
+                string _section += _sec
+                string _section += "]"
+                putct _section string -1 1
+                put term short 1
+            elif _type == 1
+                getct _key string 0x00
+                string _key += " = "
+                get _keytype byte
+                if _keytype == 0 // Integer
+                    get _value long
+                    string _str p= "%d" _value
+                elif _keytype == 1 // Float
+                    get _value long //float
+                    string _str p= "%gf" _value
+                elif _keytype == 2 // String
+                    getct _str string 0x00
+                elif _keytype == 5 // Vector
+                    get _value1 long //float
+                    get _value2 long //float
+                    get _value3 long //float
+                    string _str p= "%gf" _value1
+                    string _tmp p= ", %gf" _value2
+                    string _str += _tmp
+                    string _tmp p= ", %gf" _value3
+                    string _str += _tmp
+                elif _keytype == 7 // Bool
+                    get _value byte
+                    if _value == 0
+                        string _str = "FALSE"
+                    elif _value == 1
+                        string _str = "TRUE"
+                    else
+                        print "_value = %_value|h%"
+                        cleanexit
+                    endif
+                elif _keytype == 8 // Rectangle
+                    get _value1 long //float
+                    get _value2 long //float
+                    get _value3 long //float
+                    get _value4 long //float
+                    string _str p= "%gf" _value1
+                    string _tmp p= ", %gf" _value2
+                    string _str += _tmp
+                    string _tmp p= ", %gf" _value3
+                    string _str += _tmp
+                    string _tmp p= ", %gf" _value4
+                    string _str += _tmp
+                elif _keytype == 9 // Position
+                    get _value1 long //float
+                    get _value2 long //float
+                    string _str p= "%gf" _value1
+                    string _tmp p= ", %gf" _value2
+                    string _str += _tmp
+                elif _keytype == 10 // ARGB
+                    get _value long
+                    string _str p= "0x%08X" _value
+                else
+                    print "_keytype = %_keytype|h%"
+                    cleanexit
+                endif
+                string _key += _str
+                putct _key string -1 1
+                put term short 1
+            else
+                print "_type = %_type|h%"
+                cleanexit
+            endif
+            savepos _offset1
+        while _offset1 < _offset
+        goto _pos
+    endif
 next i
 
 print "============ All Done ============"
