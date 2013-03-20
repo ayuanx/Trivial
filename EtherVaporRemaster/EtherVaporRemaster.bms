@@ -1,0 +1,24 @@
+// Ether Vapor Remaster ".tgp" Extractor
+
+endian little
+
+idstring "TGP0"
+get _ver long
+if _ver != 1
+	cleanexit
+endif
+get _com long // dunno about compression
+get _num long
+for i = 0 < _num
+	savepos _pos
+	getct _name string 0x00
+	math _pos += 0x60
+	goto _pos
+	get _loc longlong
+	get _len longlong
+	if _len > 0
+		log _name _loc _len
+	endif
+next i
+
+print "============ All Done ============"
