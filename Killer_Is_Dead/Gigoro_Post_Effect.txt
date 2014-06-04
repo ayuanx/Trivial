@@ -1,0 +1,28 @@
+SetGlassPostEffect(bool bEnable)
+
+DEF   \KidGame\Classes\KidGigoroGirl_Base.uc
+REF   \KidGame\Classes\KidPlayerSpecialMove_Jigoro.uc
+
+
+SetEffectBlur()
+
+DEF   \KidGame\Classes\KidPlayerSpecialMove_Jigoro.uc
+REF   \KidGame\Classes\KidPlayerSpecialMove_JigoroMission01_TypeB.uc
+
+
+ZoomPostProcessProcess(float DeltaTime)
+To enable Zoom with glasses: (m_bIsGlassMatinee = False)
+
+DEF/REF   \KidGame\Classes\KidPlayerSpecialMove_Jigoro.uc
+
+
+
+1. Killer is Dead - Nightmare Edition\KidGame\_Cooked_Scripts\unpacked\KidGame.u.bak: 98,930,270 bytes
+2. Killer is Dead - Nightmare Edition\KidGame\_Cooked_Scripts\unpacked\KidGame_patched.u: 98,930,270 bytes
+
+ BEFF75:    27    28
+ BF6F6D:    27    28
+ BF6F82:    27    28
+ BFC532:    88    39
+ BFC533:    5D    0D
+ 
