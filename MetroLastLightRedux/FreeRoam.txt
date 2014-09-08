@@ -1,0 +1,12 @@
+Game version: v1.0.0.1 update 2
+
+Type: all float
+
+Stand	3FA66666
+Crouch	3F333333
+
+metro.exe+89E19F - 89 87 E8000000        - mov [rdi+000000E8],eax	; put new L/R to mem
+metro.exe+89E1A9 - 89 87 EC000000        - mov [rdi+000000EC],eax	; put new U/D to mem ([rdi+00000110] is U/D Hold)
+metro.exe+89E1BA - 89 87 F0000000        - mov [rdi+000000F0],eax	; put new F/B to mem
+
+metro.exe+75BD6E - F3 0F11 87 1C010000   - movss [rdi+0000011C],xmm0	; put viewport height to mem
