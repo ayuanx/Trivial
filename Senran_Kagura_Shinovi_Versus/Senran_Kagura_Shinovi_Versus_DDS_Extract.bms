@@ -1,0 +1,83 @@
+# Extract DDS from Senran Kagura Shinovi Versus
+# By AyuanX, June 4th 2016
+endian little
+set I_IDX long 0
+get T_ARCSIZE asize
+if T_ARCSIZE > 12
+	get T_ARCTYPE extension
+	if T_ARCTYPE == "gxt"
+		get T_FNAME basename
+		string T_FNAME += ".dds"
+		putarray 0 -1 T_FNAME
+		set A_DATA long 0
+		callfunction F_GXT 1
+	elif T_ARCTYPE == "cat"
+		callfunction F_CAT 1
+	else
+		get T_ARCNAME filename
+		print "Unknown Type: %T_ARCNAME%"
+	endif
+endif
+
+startfunction F_CAT
+get A_NAME long
+get A_DATA long
+if A_DATA != -1
+	set I_TMP long A_DATA
+	math I_TMP -= A_NAME
+	log MEMORY_FILE A_NAME I_TMP
+	get T_TYPE long -1
+	# Only support GXT for now
+	if T_TYPE == 0x2C545847 # "GXT,"
+		set I_NAMECNT long 0
+		findloc A_END byte 0 -1
+		goto 0 -1
+		for A_TMP = 0 < A_END
+			getct T_TYPE string 0x2C -1
+			getct T_TEXT string 0x2C -1
+			get T_NAME line -1
+			get T_FNAME basename
+			string T_FNAME += "$"
+			string T_FNAME += T_NAME
+			string T_FNAME += ".dds"
+			putarray 0 -1 T_FNAME
+			savepos A_TMP -1
+		next I_NAMECNT
+		set I_DATACNT long 0
+		for A_DATA = A_DATA != -1
+			putarray 1 -1 A_DATA
+			get A_DATA long
+		next I_DATACNT
+		for i = 0 < I_DATACNT
+			getarray A_DATA 1 i 
+			goto A_DATA
+			callfunction F_GXT 1
+		next i
+	endif
+endif
+endfunction
+
+startfunction F_GXT
+get I_OFFSET long
+get I_NUM long
+math I_NUM -= 1
+get I_SIZE long
+math I_SIZE -= I_OFFSET
+get I_PRE long
+for j = 0 <= I_NUM
+	if j < I_NUM
+		get I_NXT long
+	else
+		set I_NXT long I_SIZE
+	endif
+	set I_LENGTH long I_NXT
+	math I_LENGTH -= I_PRE
+	set I_PRE long I_NXT
+	getarray T_DDSNAME 0 I_IDX
+	math I_IDX += 1
+	set A_POS long A_DATA
+	math A_POS += I_OFFSET
+	log T_DDSNAME A_POS I_LENGTH
+	math I_OFFSET += I_LENGTH
+next j
+endfunction
