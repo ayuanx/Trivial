@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="24">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"Unlock Camera Pitch (for game ver 1.09)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+"OnechanbaraZ2.exe"+17D3F6:
+ db EB 0A
+//jmp OnechanbaraZ2.exe+17D402
+
+[DISABLE]
+"OnechanbaraZ2.exe"+17D3F6:
+db 72 0A
+//jb OnechanbaraZ2.exe+17D402
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
