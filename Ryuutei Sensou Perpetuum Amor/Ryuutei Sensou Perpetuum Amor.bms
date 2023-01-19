@@ -1,0 +1,11 @@
+# 龍帝戦争 ペルペトゥームアモル ".SPX" Extractor
+
+endian little
+
+get _num long
+for i = 0 < _num
+	get _offset long
+	get _len long
+	getdstring _name 16 
+	log _name _offset _len
+next i
